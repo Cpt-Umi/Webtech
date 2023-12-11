@@ -62,24 +62,48 @@ import { db } from "./models/index.js";
 //     .then((res) => console.log(JSON.stringify(res, null, 4)))
 //     .then(() => process.exit());
 
+// Marks, Total, And Grade
 db.Student.aggregate([
-    { $lookup: { from: "marks", foreignField: "regno", localField: "regno", as: "obtain" } },
-    // { $unwind: "$obtain" },
-    // { $group: { _id: { regno: "$regno", name: "$name" }, total: { $sum: "$obtain.marks" } } },
-    // { $project: { _id: 0, regno: "$_id.regno", name: "$_id.name", total: 1 } },
-    // {
-    //     $lookup: {
-    //         from: "grades",
-    //         let: { score: "$total" },
-    //         pipeline: [{ $match: { $expr: { $and: [{ $gte: ["$$score", "$start"] }, { $lte: ["$$score", "$end"] }] } } }],
-    //         as: "grade",
-    //     },
-    // },
-    // { $unwind: "$grade" },
-    // { $project: { regno: 1, name: 1, total: 1, grade: "$grade.grade" } },
+  {
+    $lookup: {
+      from: "marks",
+      foreignField: "regno",
+      localField: "regno",
+      as: "obtain",
+    },
+  },
+  { $unwind: "$obtain" },
+  {
+    $group: {
+      _id: { regno: "$regno", name: "$name" },
+      total: { $sum: "$obtain.marks" },
+    },
+  },
+  { $project: { _id: 0, regno: "$_id.regno", name: "$_id.name", total: 1 } },
+  {
+    $lookup: {
+      from: "grades",
+      let: { score: "$total" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $gte: ["$$score", "$start"] },
+                { $lte: ["$$score", "$end"] },
+              ],
+            },
+          },
+        },
+      ],
+      as: "grade",
+    },
+  },
+  { $unwind: "$grade" },
+  { $project: { regno: 1, grade: "$grade.grade" } },
 ])
-    .then((res) => console.log(JSON.stringify(res, null, 4)))
-    .then(() => process.exit());
+  .then((res) => console.log(JSON.stringify(res, null, 4)))
+  .then(() => process.exit());
 //0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
 
 // {
