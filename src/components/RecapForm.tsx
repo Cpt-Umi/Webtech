@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 type mark = {
   _id: string;

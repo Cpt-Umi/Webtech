@@ -22,14 +22,14 @@ type head = {
   total: number;
 };
 
-type grade = {
-  _id: string;
-  gradeid: number;
-  start: number;
-  end: number;
-  grade: string;
-  gpa: number;
-};
+// type grade = {
+//   _id: string;
+//   gradeid: number;
+//   start: number;
+//   end: number;
+//   grade: string;
+//   gpa: number;
+// };
 
 type total = {
   regno: string;
