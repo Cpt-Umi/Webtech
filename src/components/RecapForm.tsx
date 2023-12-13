@@ -44,9 +44,14 @@ export default function RecapForm({ regno, heads }: Prop) {
     setStudent(student);
   };
 
-  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setStudent({...student, [event.target.name.]})
-  // }
+  const handleChange = (event: ChangeEvent<HTMLInputElement>, hid: number) => {
+    if (student) {
+      const updatedMarks = student.marks.map((mark) =>
+        mark.hid === hid ? { ...mark, marks: event.target.value } : mark
+      );
+      setStudent({ ...student, marks: updatedMarks as any });
+    }
+  };
 
   useEffect(() => {
     getStudentById(regno);
@@ -63,12 +68,12 @@ export default function RecapForm({ regno, heads }: Prop) {
               <tr key={index}>
                 <td>{head.headname}</td>
                 <td>
-                  {student.marks.map((mark) =>
+                  {student?.marks?.map((mark) =>
                     head.hid === mark.hid ? (
                       <input
                         name="marks"
                         value={mark.marks}
-                        // onChange={handleChange}
+                        onChange={(event) => handleChange(event, mark.hid)}
                       />
                     ) : (
                       ""
